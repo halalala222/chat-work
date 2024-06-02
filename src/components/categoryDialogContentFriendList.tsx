@@ -231,7 +231,7 @@ export default function CategoryDialogContentFriendList() {
                 </DropdownMenu>
             </div>
             <ScrollArea
-                className="h-[315px] rounded-md border"
+                className="h-80 rounded-md border"
             >
                 <Table>
                     <TableHeader>

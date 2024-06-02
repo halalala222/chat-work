@@ -127,17 +127,17 @@ const SideBarTopBar = () => {
     const unReadInviteMessageCount = inviteMessageList.filter((message) => !message.isRead).length;
 
     return (
-        <div className='flex items-center w-100vw h-[50px] justify-start px-[10px]'>
+        <div className='flex items-center w-100vw h-12 justify-start px-2'>
             <DropdownMenu >
                 <DropdownMenuTrigger asChild>
                     <div className="pr-2">
-                        <AlignJustify width="36px" height="36px" />
+                        <AlignJustify className="w-10 h-10" />
                     </div>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent>
                     <DropdownMenuLabel>
                         <div className="flex items-center space-x-2">
-                            <Avatar className="w-[40px] h-[40px]">
+                            <Avatar className="w-12 h-12">
                                 <AvatarImage src={user.avatar} alt="@shadcn" />
                                 <AvatarFallback>{user.name}</AvatarFallback>
                             </Avatar>
@@ -203,8 +203,8 @@ const SideBarTopBar = () => {
                     </div>
                 </DropdownMenuContent>
             </DropdownMenu>
-            <div className="w-full h-[35px] flex items-center space-x-1  rounded-full border-2 border-slate-200 p-[10px]">
-                <img src={quesiton} alt="search" className="w-[20px] h-[20px]" />
+            <div className="w-full h-9 flex items-center space-x-1  rounded-full border-2 border-slate-200 p-2">
+                <img src={quesiton} alt="search" className="w-5 h-5" />
                 <p className="text-sm text-slate-400">Search</p>
             </div>
         </div >

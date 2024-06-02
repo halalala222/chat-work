@@ -7,8 +7,8 @@ import InviteMessageAccepting from "@/components/inviteMessageAccepting";
 const InviteMessageCard = ({ message, handleSelect }: { message: IInviteMessage, handleSelect: (message: IInviteMessage) => void }) => {
     return (
         <div key={message.from.userID} className="flex items-center space-x-2">
-            <div className="flex items-center space-x-2 h-[70px]" onClick={() => handleSelect(message)}>
-                <Avatar className="w-[70px] h-[70px]">
+            <div className="flex items-center space-x-2 h-16" onClick={() => handleSelect(message)}>
+                <Avatar className="w-16 h-16">
                     <AvatarImage src={message.from.avatar} />
                     <AvatarFallback>{message.from.userName}</AvatarFallback>
                 </Avatar>
@@ -16,7 +16,7 @@ const InviteMessageCard = ({ message, handleSelect }: { message: IInviteMessage,
                     <div className="text-xl">
                         {message.from.userName}
                     </div>
-                    <div className="w-[280px] text-slate-400 text-nowrap truncate">
+                    <div className="w-72 text-slate-400 text-nowrap truncate">
                         {message.invaiteMessage}
                     </div>
                 </div>

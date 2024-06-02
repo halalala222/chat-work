@@ -424,7 +424,7 @@ const CategoryDialogContentSideBar = () => {
                 Manage Categories
             </span>
             <ScrollArea
-                className='w-[250px] flex flex-col space-y-2'
+                className='w-96 flex flex-col space-y-2'
             >
                 {
                     categoryContentProps.allCategoryFriendList.map((categoryFriendList, index) => {
@@ -432,10 +432,10 @@ const CategoryDialogContentSideBar = () => {
                             return (
                                 <div
                                     key="add-category"
-                                    className='w-[240px] space-x-1 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md'
+                                    className='w-60 space-x-1 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md'
                                 >
                                     <Input
-                                        className='h-[35px]'
+                                        className='h-7'
                                         onBlur={
                                             () => {
                                                 handleNewCategoryNameBlur();
@@ -451,10 +451,10 @@ const CategoryDialogContentSideBar = () => {
                             return (
                                 <div
                                     key={categoryFriendList.category.id}
-                                    className='w-[240px] space-x-1 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md'
+                                    className='w-60 space-x-1 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md'
                                 >
                                     <Input
-                                        className='h-[35px]'
+                                        className='h-7'
                                         onBlur={
                                             () => {
                                                 handleEditCategoryNameBlur(categoryFriendList);
@@ -467,10 +467,10 @@ const CategoryDialogContentSideBar = () => {
                         }
                         return (
                             <div key={categoryFriendList.category.id}
-                                className={'w-[240px] space-x-5 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md' + (categoryFriendList.category.id === categoryContentProps.currentCategory?.category.id ? " bg-gray-200" : "")}
+                                className={'w-60 space-x-3 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md' + (categoryFriendList.category.id === categoryContentProps.currentCategory?.category.id ? " bg-gray-200" : "")}
                             >
                                 <div
-                                    className='w-[180px] text-ellipsis text-nowrap'
+                                    className='w-48 text-ellipsis text-nowrap'
                                     onClick={() => handleClickCategory(categoryFriendList)}
                                 >
                                     <span>
@@ -495,7 +495,7 @@ const CategoryDialogContentSideBar = () => {
                     })
                 }
                 <div
-                    className='w-[240px] space-x-1 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md'
+                    className='w-60 space-x-1 flex items-center cursor-pointer hover:bg-slate-100 p-2 rounded-md'
                     onClick={handleAddCategoryClick}
                 >
                     <div

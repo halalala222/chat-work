@@ -10,7 +10,7 @@ const MenuOption = (
 ) => {
 
     return (
-        <div className="flex items-center gap-2 w-[200px]">
+        <div className="flex items-center gap-2 w-48 h-7">
             <div className="text-slate-400 px-2">
                 {icon}
             </div>

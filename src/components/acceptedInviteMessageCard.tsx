@@ -17,12 +17,12 @@ const AcceptedInviteMessageCard = ({ inviteMessage, reset }: { inviteMessage: II
 
     return (
         <div>
-            <button onClick={reset} className="hover:text-black text-gray-700 absolute top-[10px] left-2 p-2">
+            <button onClick={reset} className="hover:text-black text-gray-700 absolute top-3 left-2 p-2">
                 <ArrowLeft className="w-4 h-4" />
             </button>
             <div className="p-4 space-y-6">
-                <div className="flex items-center space-x-4 h-[70px]">
-                    <Avatar className="w-[70px] h-[70px]">
+                <div className="flex items-center space-x-4 h-20">
+                    <Avatar className="w-20 h-20">
                         <AvatarImage src={inviteMessage.from.avatar} />
                         <AvatarFallback>{inviteMessage.from.userName}</AvatarFallback>
                     </Avatar>
@@ -30,7 +30,7 @@ const AcceptedInviteMessageCard = ({ inviteMessage, reset }: { inviteMessage: II
                         <div className="text-2xl font-bold">
                             {inviteMessage.from.userName}
                         </div>
-                        <div className={"rounded-sm w-[24px] " + getSexColor()}>
+                        <div className={"rounded-sm w-6 " + getSexColor()}>
                             <UserRound className="text-white" />
                         </div>
                     </div>
@@ -44,7 +44,7 @@ const AcceptedInviteMessageCard = ({ inviteMessage, reset }: { inviteMessage: II
                 </div>
                 <hr />
                 <div className="flex justify-center space-x-4">
-                    <Button variant="ghost" className="h-[70px]">
+                    <Button variant="ghost" className="h-20">
                         <div className="flex flex-col items-center space-y-2">
                             <MessageCircle className="w-8 h-8" />
                             <span>Message</span>

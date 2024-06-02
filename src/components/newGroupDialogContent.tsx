@@ -162,10 +162,10 @@ const NewGroupDialogContent = () => {
                                         className="w-10/12"
                                     />
                                 </div>
-                                <div className="flex h-[450px]">
-                                    <div className="flex flex-col space-y-2 w-[200px]">
+                                <div className="flex h-96">
+                                    <div className="flex flex-col space-y-2 w-48">
                                         <Label
-                                            className="[&:has(:focus-visible)]:ring-ring flex items-center px-2 [&:has(:focus-visible)]:ring-2 h-[40px] rounded-sm ring-1 ring-slate-300"
+                                            className="[&:has(:focus-visible)]:ring-ring flex items-center px-2 [&:has(:focus-visible)]:ring-2 h-10 rounded-sm ring-1 ring-slate-300"
                                         >
                                             <span className="sr-only">Search by phone</span>
 
@@ -177,7 +177,7 @@ const NewGroupDialogContent = () => {
                                                 onChange={handleSearch}
                                             />
                                         </Label>
-                                        <ScrollArea className="h-[400px] w-[200px]">
+                                        <ScrollArea className="h-96 w-48">
                                             {displayedFriends.map((friend) => (
                                                 <FormField
                                                     key={friend.userID}
@@ -215,21 +215,22 @@ const NewGroupDialogContent = () => {
                                             ))}
                                         </ScrollArea>
                                     </div>
-                                    <div className="flex flex-col mt-0 px-2 ">
-                                        <div className="text-lg">
+                                    <div className="flex flex-col mt-0 px-2">
+                                        <div className="text-lg h-10">
                                             selected friends count : {getSelectedFriendList(watchedItems).length}
                                         </div>
-                                        <ScrollArea className="h-[400px] mt-[20px]">
+                                        <ScrollArea className="mt-2 h-80">
                                             {
                                                 getSelectedFriendList(watchedItems).map(friend => {
                                                     return (
                                                         <div
                                                             key={friend.userID}
-                                                            className="flex items-center py-2 space-x-2 justify-between">
+                                                            className="flex items-center py-2 justify-between">
                                                             <FrindCard key={friend.userID} friend={friend} />
                                                             <Button
                                                                 variant="ghost"
                                                                 size="icon"
+                                                                className="w-8 h-8 mr-2"
                                                                 onClick={() => handleRemoveItem(friend.userID)}
                                                             >
                                                                 <X className="w-4 h-4" />
@@ -250,7 +251,7 @@ const NewGroupDialogContent = () => {
                             <Button variant="secondary">Cancel</Button>
                         </DialogClose>
                         <DialogClose asChild>
-                            <Button type="submit">Create    </Button>
+                            <Button type="submit">Create</Button>
                         </DialogClose>
 
                     </div>

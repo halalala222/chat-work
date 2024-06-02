@@ -19,12 +19,12 @@ const UnAcceptedInviteMessageCard = ({ inviteMessage, reset }: { inviteMessage: 
 
     return (
         <div>
-            <button onClick={reset} className="hover:text-black text-gray-700 absolute top-[10px] left-2 p-2">
+            <button onClick={reset} className="hover:text-black text-gray-700 absolute top-3 left-2 p-2">
                 <ArrowLeft className="w-4 h-4" />
             </button>
             <div className="p-4 space-y-6">
-                <div className="flex items-center space-x-4 h-[70px]">
-                    <Avatar className="w-[70px] h-[70px]">
+                <div className="flex items-center space-x-4 h-16">
+                    <Avatar className="w-20 h-20">
                         <AvatarImage src={inviteMessage.from.avatar} />
                         <AvatarFallback>{inviteMessage.from.userName}</AvatarFallback>
                     </Avatar>
@@ -32,7 +32,7 @@ const UnAcceptedInviteMessageCard = ({ inviteMessage, reset }: { inviteMessage: 
                         <div className="text-2xl font-bold">
                             {inviteMessage.from.userName}
                         </div>
-                        <div className={"rounded-sm w-[24px] " + getSexColor()}>
+                        <div className={"rounded-sm w-6 " + getSexColor()}>
                             <UserRound className="text-white" />
                         </div>
                     </div>

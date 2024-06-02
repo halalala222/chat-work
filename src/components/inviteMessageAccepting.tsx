@@ -68,7 +68,7 @@ const InviteMessageAccepting = ({ selectUserID }: { selectUserID: string }) => {
                                 <FormLabel>Category</FormLabel>
                                 <Select onValueChange={field.onChange} defaultValue={field.value}>
                                     <FormControl>
-                                        <SelectTrigger className="w-[200px]">
+                                        <SelectTrigger className="w-56">
                                             <SelectValue placeholder="Select a category" />
                                         </SelectTrigger>
                                     </FormControl>

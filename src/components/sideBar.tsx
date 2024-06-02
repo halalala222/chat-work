@@ -105,17 +105,18 @@ const mockGetChatList = (): IChat[] => {
 }
 
 const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
-    const { chatList, setChatList, currentChat, setCurrentChat } = useChatStore()
+    const { chatList, setChatList, currentChat, setCurrentChat } = useChatStore();
     const handleChange = (userID: string) => {
-        const chat = chatList.find((chat) => chat.userID === userID)
+        const chat = chatList.find((chat) => chat.userID === userID);
         if (chat) {
-            setCurrentChat(chat)
+            setCurrentChat(chat);
         }
-    }
+    };
 
     useEffect(() => {
-        setChatList(mockGetChatList())
-    }, [])
+        setChatList(mockGetChatList());
+    }, []);
+
 
     const sidebarVariants = {
         open: {
@@ -144,7 +145,9 @@ const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
         }
     };
 
-
+    const handleChatListClick = (clickChat: IChat) => {
+        setCurrentChat(clickChat);
+    }
 
     return (
         <AnimatePresence>
@@ -153,9 +156,10 @@ const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
                 animate={isCollapsed ? "collapsed" : "open"}
                 exit="collapsed"
                 variants={sidebarVariants}
+                className="h-full"
             >
                 {!isCollapsed && <ChatTopBar />}
-                <ScrollArea className="h-[700px] rounded-md border">
+                <ScrollArea className="h-[91%] rounded-md border">
                     {chatList.map((chat) => (
                         <motion.div
                             key={chat.userID}
@@ -165,9 +169,9 @@ const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
                             variants={sidebarVariants}
                             transition={{ duration: 0.5 }}
                             onClick={() => handleChange(chat.userID)}
-                            className={"flex items-center p-2 hover:bg-gray-100 space-x-0 h-[80px]" + (currentChat?.userID === chat.userID ? " bg-gray-200" : "")}
+                            className={"max-w-80 flex items-center p-2 hover:bg-gray-100 space-x-0 h-16" + (currentChat?.userID === chat.userID ? " bg-gray-200" : "")}
                         >
-                            <Avatar className="w-[55px] h-[55px]">
+                            <Avatar className="w-12 h-12">
                                 <AvatarImage src={chat.avatar} alt="@shadcn" />
                                 <AvatarFallback>userName</AvatarFallback>
                             </Avatar>
@@ -175,8 +179,9 @@ const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
                                 variants={contentVariants}
                                 animate={isCollapsed ? "collapsed" : "open"}
                                 className="flex flex-col w-full pl-3"
+                                onClick={() => handleChatListClick(chat)}
                             >
-                                <div className="flex flex-col">
+                                <div className="flex flex-col max-w-52">
                                     <div className="flex justify-between">
                                         <div className="text-base font-semibold">
                                             {chat.userName}
@@ -185,7 +190,7 @@ const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
                                             {chat.latestMessageTime}
                                         </div>
                                     </div>
-                                    <div className="max-w-[150px] text-sm text-gray-500 text-ellipsis overflow-hidden whitespace-nowrap">
+                                    <div className="max-w-48 text-sm text-gray-500 text-ellipsis overflow-hidden whitespace-nowrap">
                                         {chat.latestMessage}
                                     </div>
                                 </div>
@@ -193,7 +198,8 @@ const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
 
                         </motion.div>
                     ))}
-                    <div className="h-[30px]"></div>
+                    <div className="h-3 flex items-center justify-center text-lg">
+                    </div>
                 </ScrollArea>
             </motion.div>
         </AnimatePresence>

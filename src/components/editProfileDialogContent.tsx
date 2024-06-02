@@ -158,9 +158,9 @@ const EditProfileDialogContent = () => {
     }
 
     return (
-        <DialogContent className="w-[300px]">
+        <DialogContent className="w-80 overflow-hidden">
             <div className="flex items-center flex-col space-y-2  h-[500px]">
-                <div className="relative w-[200px] h-[200px]">
+                <div className="relative w-56 h-56">
                     <input type="file" ref={fileInputRef} className="hidden" onChange={handleUploadPicture} accept="image/gif,image/jpeg,image/jpg,image/png" multiple />
                     <Avatar className="w-full h-full">
                         <AvatarImage src={user.avatar} alt="@shadcn" />
@@ -173,7 +173,7 @@ const EditProfileDialogContent = () => {
                         }}
                     >
                         {/* Assuming there's an Icon component with a camera icon */}
-                        <Camera name="camera" className="text-white text-3xl w-[40px] h-[40px]" />
+                        <Camera name="camera" className="text-white text-3xl w-10 h-10" />
                     </div>
                 </div>
                 <AnimatePresence >
@@ -202,20 +202,20 @@ const EditProfileDialogContent = () => {
                                                     <UserRound className="text-white" />
                                                 </div>
                                             </PopoverTrigger>
-                                            <PopoverContent className="flex space-y-2 w-[50px] flex-col items-center">
-                                                <div className="rounded-sm bg-sky-500 w-[24px]" onClick={() => { handleChangeGender('0') }}>
+                                            <PopoverContent className="flex space-y-2 w-16 flex-col items-center">
+                                                <div className="rounded-sm bg-sky-500 w-6" onClick={() => { handleChangeGender('0') }}>
                                                     <UserRound className="text-white" />
                                                 </div>
-                                                <div className="rounded-sm bg-pink-500 w-[24px]" onClick={() => { handleChangeGender('1') }}>
+                                                <div className="rounded-sm bg-pink-500 w-6" onClick={() => { handleChangeGender('1') }}>
                                                     <UserRound className="text-white" />
                                                 </div>
-                                                <div className="rounded-sm bg-gray-500 w-[24px]" onClick={() => { handleChangeGender('-1') }}>
+                                                <div className="rounded-sm bg-gray-500 w-6" onClick={() => { handleChangeGender('-1') }}>
                                                     <UserRound className="text-white" />
                                                 </div>
                                             </PopoverContent>
                                         </Popover>
                                     </div>
-                                    <div className="max-w-[250px] text-gray-500 text-base break-words">
+                                    <div className="max-w-64 text-gray-500 text-base break-words">
                                         {
                                             user.description ? user.description : "No signature"
                                         }
@@ -228,7 +228,7 @@ const EditProfileDialogContent = () => {
                                             control={form.control}
                                             name="name"
                                             render={({ field }) => (
-                                                <FormItem className="space-y-3 h-[90px]">
+                                                <FormItem className="space-y-3 h-26">
                                                     <FormLabel className="flex items-center space-x-2">
                                                         <div className="font-semibold">
                                                             Name
@@ -237,7 +237,7 @@ const EditProfileDialogContent = () => {
                                                     </FormLabel>
                                                     <FormControl>
                                                         <Input
-                                                            className="h-[40px]"
+                                                            className="h-10"
                                                             placeholder="Type your name here."
                                                             {...field}
                                                         />
@@ -250,7 +250,7 @@ const EditProfileDialogContent = () => {
                                             control={form.control}
                                             name="description"
                                             render={({ field }) => (
-                                                <FormItem className="space-y-3 h-[150px]">
+                                                <FormItem className="space-y-3 h-26">
                                                     <FormLabel className="flex items-center space-x-2">
                                                         <div className="font-semibold">
                                                             Signature
@@ -259,7 +259,7 @@ const EditProfileDialogContent = () => {
                                                     </FormLabel>
                                                     <FormControl>
                                                         <Textarea
-                                                            className="h-[100px]"
+                                                            className="h-28"
                                                             placeholder="Type your message here."
                                                             {...field}
                                                         />
