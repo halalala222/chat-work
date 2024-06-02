@@ -1,11 +1,16 @@
 import OSS from 'ali-oss';
 import getSTSToken from '@/lib/getSTSToken';
 
+const getFileType = (file: File): string => {
+    return file.type.split('/')[1];
+}
+
 const UploadFile = async ({ file, userID }: { file: File, userID: number }): Promise<string | null> => {
     const stsToken = await getSTSToken();
     if (!stsToken) {
         return null;
     }
+    const fileType = getFileType(file);
     const client = new OSS({
         // 将<YOUR_BUCKET>设置为OSS Bucket名称。
         bucket: "chat-ncu",
@@ -15,7 +20,8 @@ const UploadFile = async ({ file, userID }: { file: File, userID: number }): Pro
         accessKeySecret: stsToken.accessKeySecret,
         stsToken: stsToken.securityToken,
     });
-    const uuid = userID + '-' + new Date().getTime();
+    const uuid = userID + '-' + new Date().getTime() + '.' + fileType;
+    console.log(uuid);
     try {
         const result = await client.put(uuid, file);
         return result.url;
