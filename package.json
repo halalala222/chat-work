@@ -45,6 +45,7 @@
     "lucide-react": "^0.378.0",
     "match-sorter": "^6.3.4",
     "postcss": "^8.4.38",
+    "prop-types": "15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-hook-form": "^7.51.4",
@@ -60,6 +61,7 @@
     "zustand": "^4.5.2"
   },
   "devDependencies": {
+    "@tailwindcss/line-clamp": "^0.4.4",
     "@types/node": "^18.0.3",
     "@types/react": "^18.2.66",
     "@types/react-dom": "^18.2.22",
