@@ -239,6 +239,23 @@ export const useCategoryContentStore = create<ICategoryContent>((set) => ({
 export interface IMessage {
     id: number;
     avatar: string;
-    name: string;
+    userName: string;
+    userID: number;
     message: string;
+}
+
+interface IMessageStore {
+    messageList: IMessage[];
+    setMessageList: (messageList: IMessage[]) => void;
+}
+
+export const useMessageStore = create<IMessageStore>((set) => ({
+    messageList: [],
+    setMessageList: (messageList) => set({ messageList })
+}));
+
+export interface IShareContent {
+    title: string;
+    img: string;
+    link: string;
 }
