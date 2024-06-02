@@ -15,20 +15,23 @@ import { IMessage, useUserStore } from "@/store";
 import { Textarea } from "@/components/ui/textarea";
 import { EmojiPicker } from "@/components/emojiPicker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-
+import UploadFile from "@/lib/uploadFile";
+import { useToast } from "@/components/ui/use-toast";
 interface ChatBottombarProps {
     sendMessage: (newMessage: IMessage) => void;
-    isMobile: boolean;
 }
 
 export const BottombarIcons = [{ icon: FileImage }, { icon: Paperclip }];
 
 const ChatBottombar = ({
-    sendMessage, isMobile,
+    sendMessage,
 }: ChatBottombarProps) => {
     const [message, setMessage] = useState("");
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const { user } = useUserStore();
+    const pictureInputRef = useRef<HTMLInputElement>(null);
+    const fileInputRef = useRef<HTMLInputElement>(null);
+    const { toast } = useToast();
 
     const handleInputChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setMessage(event.target.value);
@@ -37,7 +40,8 @@ const ChatBottombar = ({
     const handleThumbsUp = () => {
         const newMessage: IMessage = {
             id: message.length + 1,
-            name: user.name,
+            userName: user.name,
+            userID: user.id,
             avatar: user.avatar,
             message: "👍",
         };
@@ -49,7 +53,8 @@ const ChatBottombar = ({
         if (message.trim()) {
             const newMessage: IMessage = {
                 id: message.length + 1,
-                name: user.name,
+                userName: user.name,
+                userID: user.id,
                 avatar: user.avatar,
                 message: message.trim(),
             };
@@ -74,8 +79,50 @@ const ChatBottombar = ({
         }
     };
 
+    const handleUploadPicture = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (!e.target.files) return;
+        const file = e.target.files[0];
+        try {
+            const reuslt = await UploadFile({
+                file: file,
+                userID: user.id,
+            });
+            if (!reuslt) {
+                toast({
+                    title: "Upload failed",
+                    variant: "destructive",
+                    description: "Please try again",
+                })
+            } else {
+                const newMessage: IMessage = {
+                    id: message.length + 1,
+                    userName: user.name,
+                    userID: user.id,
+                    avatar: user.avatar,
+                    message: reuslt,
+                };
+                sendMessage(newMessage);
+                toast({
+                    title: "Upload success",
+                    description: "Your file has been uploaded successfully",
+                })
+            }
+        } catch (e) {
+            toast({
+                title: "Upload failed",
+                variant: "destructive",
+                description: "Please try again",
+            })
+        }
+    }
+
+    const getIconAcceptFileType = (index: number): string => {
+        if (index === 0) return "image/gif,image/jpeg,image/jpg,image/png";
+        return "*";
+    }
+
     return (
-        <div className="p-2 flex justify-between w-full items-center gap-2">
+        <div className="flex justify-between w-full items-center gap-2">
             <div className="flex">
                 <Popover>
                     <PopoverTrigger asChild>
@@ -92,31 +139,7 @@ const ChatBottombar = ({
                     <PopoverContent
                         side="top"
                         className="w-full p-2">
-                        {message.trim() || isMobile ? (
-                            <div className="flex gap-2">
-                                <div
-                                    className={cn(
-                                        buttonVariants({ variant: "ghost", size: "icon" }),
-                                        "h-9 w-9",
-                                        "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
-                                    )}
-                                >
-                                    <Mic size={20} className="text-muted-foreground" />
-                                </div>
-                                {BottombarIcons.map((icon, index) => (
-                                    <div
-                                        key={index}
-                                        className={cn(
-                                            buttonVariants({ variant: "ghost", size: "icon" }),
-                                            "h-9 w-9",
-                                            "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
-                                        )}
-                                    >
-                                        <icon.icon size={20} className="text-muted-foreground" />
-                                    </div>
-                                ))}
-                            </div>
-                        ) : (
+                        {
                             <div
                                 className={cn(
                                     buttonVariants({ variant: "ghost", size: "icon" }),
@@ -126,10 +149,10 @@ const ChatBottombar = ({
                             >
                                 <Mic size={20} className="text-muted-foreground" />
                             </div>
-                        )}
+                        }
                     </PopoverContent>
                 </Popover>
-                {!message.trim() && !isMobile && (
+                {!message.trim() && (
                     <div className="flex">
                         {BottombarIcons.map((icon, index) => (
                             <div
@@ -140,7 +163,20 @@ const ChatBottombar = ({
                                     "dark:bg-muted dark:text-muted-foreground dark:hover:bg-muted dark:hover:text-white"
                                 )}
                             >
-                                <icon.icon size={20} className="text-muted-foreground" />
+                                <input type="file" ref={index === 0 ? pictureInputRef : fileInputRef} className="hidden" onChange={handleUploadPicture} accept={getIconAcceptFileType(index)} multiple />
+                                <icon.icon
+                                    onClick={() => {
+                                        if (index === 0) {
+                                            if (!pictureInputRef.current) return;
+                                            pictureInputRef.current.click()
+                                        } else {
+                                            if (!fileInputRef.current) return;
+                                            fileInputRef.current.click()
+                                        }
+                                    }}
+                                    size={20}
+                                    className="text-muted-foreground"
+                                />
                             </div>
                         ))}
                     </div>
@@ -170,7 +206,6 @@ const ChatBottombar = ({
                         onKeyDown={handleKeyPress}
                         onChange={handleInputChange}
                         name="message"
-                        placeholder="Aa"
                         className="w-full min-h-9 h-9 border rounded-full flex items-center resize-none overflow-hidden bg-background"
                     ></Textarea>
                     <div className="absolute right-2 bottom-0.5  ">
