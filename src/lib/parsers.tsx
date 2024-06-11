@@ -56,20 +56,6 @@ const isValidSite = (siteName?: string) => {
     return siteName && SITES.includes(siteName)
 }
 
-const preprocessJson = (json: Record<string, any>) => {
-    const { url } = json
-    const siteName = getSiteName(url)
-
-    if (siteName === 'bilibili') {
-        json.images = json.images.map((item: string) => item.split('@')[0])
-        json.favicons = json.favicons.map((item: string) => item.split('@')[0])
-    } else if (siteName === 'wechat') {
-        json.images = json.images.map((item: string) => item.replace('?wx_fmt=jpeg', ''))
-    }
-    return json
-}
-
-
 export interface IShareContent {
     title: string,
     img: string,

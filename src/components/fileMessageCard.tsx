@@ -74,18 +74,18 @@ const FileMessageCard = ({ message, isOther }: { message: IMessage, isOther: boo
     const [fileSize, setFileSize] = useState<string | null>(null);
     useEffect(() => {
         const fetchFileSize = async () => {
-            const size = await getFileSize(message.message);
+            const size = await getFileSize(message.messageContent);
             setFileSize(size);
         };
 
         fetchFileSize(); // 触发异步操作
-    }, [message.message]); // 依赖项，只在 message.message 变化时重新获取文件大小
+    }, [message.messageContent]); // 依赖项，只在 message.message 变化时重新获取文件大小
 
     // 处理文件下载
     const handleDownload = () => {
         const link = document.createElement('a');
-        link.href = message.message;
-        link.download = getFileName(message.message); // 设置下载的文件名
+        link.href = message.messageContent;
+        link.download = getFileName(message.messageContent); // 设置下载的文件名
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -99,7 +99,7 @@ const FileMessageCard = ({ message, isOther }: { message: IMessage, isOther: boo
                     <div
                         className="rounded-lg flex items-center justify-center"
                     >
-                        {getFileIcon(message.message)}
+                        {getFileIcon(message.messageContent)}
                     </div>
                 )
             }
@@ -107,7 +107,7 @@ const FileMessageCard = ({ message, isOther }: { message: IMessage, isOther: boo
                 <span
                     className="truncate text-primary"
                 >
-                    {getFileName(message.message)}
+                    {getFileName(message.messageContent)}
                 </span>
                 <div
                     className="flex justify-between items-center w-full mt-1"
@@ -148,7 +148,7 @@ const FileMessageCard = ({ message, isOther }: { message: IMessage, isOther: boo
                     <div
                         className="rounded-lg flex items-center justify-center"
                     >
-                        {getFileIcon(message.message)}
+                        {getFileIcon(message.messageContent)}
                     </div>
                 )
             }
