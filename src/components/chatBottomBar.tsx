@@ -11,7 +11,7 @@ import React, { useRef, useState } from "react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
-import { IMessage, useUserStore } from "@/store";
+import { IMessage, useChatStore, useUserStore } from "@/store";
 import { Textarea } from "@/components/ui/textarea";
 import { EmojiPicker } from "@/components/emojiPicker";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
@@ -29,6 +29,7 @@ const ChatBottombar = ({
     const [message, setMessage] = useState("");
     const inputRef = useRef<HTMLTextAreaElement>(null);
     const { user } = useUserStore();
+    const { currentChat } = useChatStore();
     const pictureInputRef = useRef<HTMLInputElement>(null);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const { toast } = useToast();
@@ -40,10 +41,14 @@ const ChatBottombar = ({
     const handleThumbsUp = () => {
         const newMessage: IMessage = {
             id: message.length + 1,
-            userName: user.name,
-            userID: user.id,
-            avatar: user.avatar,
-            message: "👍",
+            chatListId: currentChat?.chatListId || 0,
+            userName: user.username,
+            userId: user.id,
+            userAvatar: user.avatar,
+            messageContent: "👍",
+            readStatus: 1,
+            messageType: 0,
+            sendTime: new Date().toISOString(),
         };
         sendMessage(newMessage);
         setMessage("");
@@ -53,10 +58,14 @@ const ChatBottombar = ({
         if (message.trim()) {
             const newMessage: IMessage = {
                 id: message.length + 1,
-                userName: user.name,
-                userID: user.id,
-                avatar: user.avatar,
-                message: message.trim(),
+                chatListId: currentChat?.chatListId || 0,
+                userName: user.username,
+                userId: user.id,
+                userAvatar: user.avatar,
+                messageContent: message,
+                readStatus: 1,
+                messageType: 0,
+                sendTime: new Date().toISOString(),
             };
             sendMessage(newMessage);
             setMessage("");
@@ -96,10 +105,14 @@ const ChatBottombar = ({
             } else {
                 const newMessage: IMessage = {
                     id: message.length + 1,
-                    userName: user.name,
-                    userID: user.id,
-                    avatar: user.avatar,
-                    message: reuslt,
+                    chatListId: currentChat?.chatListId || 0,
+                    userName: user.username,
+                    userId: user.id,
+                    userAvatar: user.avatar,
+                    messageContent: reuslt,
+                    messageType: 1,
+                    readStatus: 1,
+                    sendTime: new Date().toISOString(),
                 };
                 sendMessage(newMessage);
                 toast({

@@ -14,7 +14,7 @@ import { cacheSet } from "@/lib/localstorage";
 import { COMMON_CONFIG } from "@/config";
 
 const loginPhonePattern = "^[1][3,4,5,6.7,8,9][0-9]{9}$"
-const loginCodePattern = "^[0-9]{6}$"
+const loginCodePattern = "^[0-9]{4}$"
 
 const LoginPage = () => {
     const { toast } = useToast();

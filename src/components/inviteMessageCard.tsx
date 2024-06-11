@@ -22,7 +22,7 @@ const InviteMessageCard = ({ message, handleSelect }: { message: IInviteMessage,
                 </div>
             </div>
             {
-                message.isRead ? (
+                message.isAccepted ? (
                     <span className="text-gray-500">Accepted</span>
                 ) : (
                     <Dialog>

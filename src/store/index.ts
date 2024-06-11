@@ -20,19 +20,41 @@ export const useLoginStore = create<ILoginStore>((set) => ({
     setLogin: (login) => set({ login })
 }))
 
-export interface IChat {
-    userID: string;
+export interface IMessage {
+    id: number;
+    chatListId: number;
+    userId: number;
+    messageContent: string;
+    messageType: number;
+    readStatus: number;
+    sendTime: string;
+    userAvatar: string;
     userName: string;
-    latestMessage: string;
-    latestMessageTime: string;
-    avatar: string;
+}
+
+export interface IChat {
+    chatListId: number;
+    chatName: string;
+    chatAvatar: string;
+    lastMessageType: number;
+    lastMessageContent: string;
+    readStatus: number;
+    lastSendTime: string;
+    hasNewMessage: boolean;
+}
+
+export interface IChatListMessageList {
+    chat: IChat;
+    messageList: IMessage[];
 }
 
 interface IChatList {
-    chatList: IChat[];
-    setChatList: (chatList: IChat[]) => void;
+    chatList: IChatListMessageList[]
+    setChatList: (chatList: IChatListMessageList[]) => void;
     currentChat: IChat | null;
     setCurrentChat: (chat: IChat | null) => void;
+    currentMessageList: IMessage[],
+    setCurrentMessageList: (messageList: IMessage[]) => void;
 }
 
 export const useChatStore = create<IChatList>((set) => ({
@@ -40,12 +62,14 @@ export const useChatStore = create<IChatList>((set) => ({
     setChatList: (chatList) => set({ chatList }),
     currentChat: null,
     setCurrentChat: (chat) => set({ currentChat: chat }),
+    currentMessageList: [],
+    setCurrentMessageList: (messageList) => set({ currentMessageList: messageList }),
 }))
 
 export interface IUser {
     id: number;
     phone: string;
-    name: string;
+    username: string;
     avatar: string;
     description?: string;
     gender: string;
@@ -65,7 +89,7 @@ const getUserProfile = (): IUser => {
     return {
         id: 0,
         phone: '',
-        name: '',
+        username: '',
         avatar: '',
         description: '',
         gender: '2',
@@ -78,9 +102,9 @@ export const useUserStore = create<IUserStore>((set) => ({
 }))
 
 export interface IFriend {
-    userID: string;
-    userName: string;
-    avatar: string;
+    friendId: string;
+    friendName: string;
+    friendAvatar: string;
 }
 
 interface IFriendList {
@@ -103,19 +127,35 @@ export interface IInviteMessage {
         age?: number;
     }
     time: string;
-    invaiteType: number;
     invaiteMessage: string;
-    isRead: boolean;
+    isAccepted: boolean;
 }
+
+export interface IGetUserFriendInviteMessageResponse {
+    id: number,
+    status: number,
+    senderId: number,
+    senderName: string,
+    senderAvatar: string,
+    senderSex: number,
+    helloWord: string,
+    createTime: string,
+}
+
+
 
 interface IInviteMessageList {
     inviteMessageList: IInviteMessage[];
+    selectedMessage: IInviteMessage | null;
     setInviteMessageList: (inviteMessageList: IInviteMessage[]) => void;
+    setSelectedMessage: (message: IInviteMessage | null) => void;
 }
 
 export const useInviteMessageStore = create<IInviteMessageList>((set) => ({
     inviteMessageList: [],
+    selectedMessage: null,
     setInviteMessageList: (inviteMessageList) => set({ inviteMessageList }),
+    setSelectedMessage: (message) => set({ selectedMessage: message }),
 }))
 
 export interface ILoginRequest {
@@ -138,7 +178,7 @@ export interface IGetSTSTokenResponse {
 
 export interface ISearchUser {
     id: number;
-    name: string;
+    username: string;
     avatar: string;
 }
 
@@ -148,7 +188,7 @@ export interface ISearchUserResponse {
 }
 
 export interface IUserCategory {
-    id: string;
+    id: number;
     categoryName: string;
 }
 
@@ -204,7 +244,7 @@ export interface IEditUserProfileRequest {
 }
 
 export interface IEditCategory {
-    id: string;
+    id: number;
     categoryName: string;
     isEditing: boolean;
 }
@@ -236,26 +276,29 @@ export const useCategoryContentStore = create<ICategoryContent>((set) => ({
     setCategoryContentProps: (categoryContent) => set({ categoryContentProps: categoryContent })
 }))
 
-export interface IMessage {
-    id: number;
-    avatar: string;
-    userName: string;
-    userID: number;
-    message: string;
-}
-
-interface IMessageStore {
-    messageList: IMessage[];
-    setMessageList: (messageList: IMessage[]) => void;
-}
-
-export const useMessageStore = create<IMessageStore>((set) => ({
-    messageList: [],
-    setMessageList: (messageList) => set({ messageList })
-}));
-
 export interface IShareContent {
     title: string;
     img: string;
     link: string;
+}
+
+export interface IHandleInviteMessageRequest {
+    SenderId: number;
+    CategoryId: number;
+    Status: 1 | 2;
+}
+
+interface IUserCategoryStore {
+    userCategory: IUserCategory[];
+    setUserCategory: (userCategory: IUserCategory[]) => void;
+}
+
+export const useUserCategoryStore = create<IUserCategoryStore>((set) => ({
+    userCategory: [],
+    setUserCategory: (userCategory) => set({ userCategory })
+}))
+
+export interface IGetNewChatMessageListRequest {
+    chatListId: number;
+    oldMessageId: number;
 }

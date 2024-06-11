@@ -4,14 +4,14 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 const FrindCard = ({ friend }: { friend: IFriend }) => {
     return (
         <div
-            key={friend.userID}
+            key={friend.friendId}
             className="flex items-center space-x-2">
             <Avatar className="w-[40px] h-[40px]">
-                <AvatarImage src={friend.avatar} alt={friend.userName} />
-                <AvatarFallback>{friend.userName}</AvatarFallback>
+                <AvatarImage src={friend.friendAvatar} alt={friend.friendName} />
+                <AvatarFallback>{friend.friendName}</AvatarFallback>
             </Avatar>
             <div>
-                {friend.userName}
+                {friend.friendName}
             </div>
         </div>
     )

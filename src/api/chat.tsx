@@ -3,7 +3,7 @@ import { handleRequest } from "@/api/handleRequest";
 import { handleResponseError } from "@/api/handleResponseError";
 import { handleResponseSuccess } from "@/api/handleResponseSuccess";
 import { COMMON_CONFIG } from "@/config";
-import { IAddFriendRequest, IGetSTSTokenResponse, ICreatCategoryRequest, ILoginRequest, ILoginResponse, ISearchUserResponse, IUser, IUserCategory, ICreateCategoryResponse, IEditUserProfileRequest } from "@/store";
+import { IAddFriendRequest, IGetSTSTokenResponse, ICreatCategoryRequest, ILoginRequest, ILoginResponse, ISearchUserResponse, IUser, IUserCategory, ICreateCategoryResponse, IEditUserProfileRequest, IHandleInviteMessageRequest, IGetUserFriendInviteMessageResponse, IFriend, IChat, IGetNewChatMessageListRequest, IMessage } from "@/store";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const chatAxios = axios.create({
@@ -22,8 +22,13 @@ const apiRouters = {
     category: '/category/list',
     createCategory: '/category/add',
     addFriend: '/friend/add',
+    friendInviteMessageList: '/friend/invitationList',
     editUserProfile: '/user/update',
     getUserProfile: '/user',
+    handleInvitedMessage: '/friend/handle',
+    userFriendLsit: '/friend/list',
+    getUserChatList: '/chat/list',
+    getUserNewChatMessageList: '/chat/new',
 }
 
 export const login = async (data: ILoginRequest): Promise<ILoginResponse> => {
@@ -32,7 +37,11 @@ export const login = async (data: ILoginRequest): Promise<ILoginResponse> => {
 }
 
 export const getLoginCode = async (phone: string) => {
-    const res = await chatAxios.post(apiRouters.getLoginCode, { params: { phone } })
+    const res = await chatAxios.post(apiRouters.getLoginCode, {}, {
+        params: {
+            phone: phone
+        }
+    })
     return res.data
 }
 
@@ -53,20 +62,66 @@ export const searchUser = async (phone: string): Promise<ISearchUserResponse> =>
 
 export const getUserCategoryList = async (): Promise<IUserCategory[]> => {
     const res = await chatAxios.get(apiRouters.category);
-    return res.data.data.categoryList;
+    return res.data.data;
 }
 
 export const addFriend = async (req: IAddFriendRequest) => {
-    const res = await chatAxios.post(apiRouters.addFriend, { params: { req } });
+    const res = await chatAxios.post(apiRouters.addFriend, {
+        receiverId: req.receiverId,
+        categoryId: req.categoryId,
+        helloWord: req.helloWorld
+    });
     return res.data.data;
 }
 
 export const createCategory = async (categoryName: ICreatCategoryRequest): Promise<ICreateCategoryResponse> => {
-    const res = await chatAxios.post(apiRouters.createCategory, { params: { categoryName } });
+    const res = await chatAxios.post(apiRouters.createCategory, {
+        categoryName: categoryName.categoryName
+    });
     return res.data.data;
 }
 
 export const editUserProfile = async (data: IEditUserProfileRequest) => {
-    const res = await chatAxios.put(apiRouters.editUserProfile, { params: { data } });
+    const res = await chatAxios.put(apiRouters.editUserProfile, data);
+    return res.data.data;
+}
+
+export const handleInvitedMessage = async (data: IHandleInviteMessageRequest) => {
+    await chatAxios.post(apiRouters.handleInvitedMessage,
+        {
+            senderId: data.SenderId,
+            categoryId: data.CategoryId,
+            status: data.Status,
+        }
+    );
+}
+
+export const getUserFriendInviteMessageList = async (): Promise<IGetUserFriendInviteMessageResponse[]> => {
+    const res = await chatAxios.get(apiRouters.friendInviteMessageList);
+    return res.data.data;
+}
+
+export const getUserFriendList = async (): Promise<IFriend[]> => {
+    const res = await chatAxios.get(apiRouters.userFriendLsit);
+    return res.data.data.friendList;
+}
+
+export const getUserCategoryFriendList = async (categoryId: number): Promise<IFriend[]> => {
+    const res = await chatAxios.get(`${apiRouters.userFriendLsit}/${categoryId}`);
+    return res.data.data.friendList;
+}
+
+export const getUserChatList = async (): Promise<IChat[]> => {
+    const res = await chatAxios.get(apiRouters.getUserChatList);
+    return res.data.data;
+}
+
+export const getNewChatMessageList = async (body: IGetNewChatMessageListRequest): Promise<IMessage[]> => {
+    const res = await chatAxios.get(apiRouters.getUserNewChatMessageList, {
+        params: {
+            chatListId: body.chatListId,
+            oldMessageId: body.oldMessageId,
+        }
+    });
     return res.data.data;
 }

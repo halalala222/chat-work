@@ -4,16 +4,40 @@ import InviteMessageCard from "@/components/inviteMessageCard";
 import UnAcceptedInviteMessageCard from "@/components/unAcceptedInviteMessageCard";
 import AcceptedInviteMessageCard from "@/components/acceptedInviteMessageCard";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import { getUserFriendInviteMessageList } from "@/api/chat";
+import { useEffect } from "react";
 
 const InviteMessageListDialogContent = () => {
-    const { inviteMessageList } = useInviteMessageStore();
-    const [selectedMessage, setSelectedMessage] = useState<IInviteMessage | null>(null);
+    const { inviteMessageList, setInviteMessageList, selectedMessage, setSelectedMessage } = useInviteMessageStore();
 
     const handleClickToSelectMessage = (message: IInviteMessage) => {
         setSelectedMessage(message);
     }
+
+    useEffect(() => {
+        getUserFriendInviteMessageList().then((res) => {
+            if (!res) {
+                return;
+            }
+            const newInviteMessageList = res.map((inviteMessage) => {
+                return {
+                    from: {
+                        userID: inviteMessage.senderId.toString(),
+                        userName: inviteMessage.senderName,
+                        avatar: inviteMessage.senderAvatar,
+                        sex: -1,
+                    },
+                    time: inviteMessage.createTime,
+                    invaiteMessage: inviteMessage.helloWord,
+                    isAccepted: inviteMessage.status === 1,
+                }
+            });
+
+            setInviteMessageList(newInviteMessageList);
+        });
+    }, [])
+
     const handleResetSelectedMessage = () => {
         setSelectedMessage(null);
     }
@@ -59,8 +83,8 @@ const InviteMessageListDialogContent = () => {
                                 </ScrollArea>
                             </>
                         ) : (
-                            selectedMessage.isRead === false ? (
-                                <UnAcceptedInviteMessageCard inviteMessage={selectedMessage} reset={handleResetSelectedMessage} />
+                            selectedMessage.isAccepted === false ? (
+                                <UnAcceptedInviteMessageCard selectUserID={selectedMessage.from.userID} />
                             ) : (
                                 <AcceptedInviteMessageCard inviteMessage={selectedMessage} reset={handleResetSelectedMessage} />
                             )

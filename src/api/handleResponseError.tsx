@@ -1,13 +1,20 @@
 import { AxiosError } from "axios";
+import { useToast } from "@/components/ui/use-toast";
 
 export const handleResponseError = (error: AxiosError<{ type: string, code: number }, any>) => {
     const { code: ClientErrorCode } = error
+    const { toast } = useToast();
+
     switch (ClientErrorCode) {
         case 'ERR_NETWORK':
-            alert('网络异常')
+            alert('network error')
             break;
         case 'ECONNABORTED':
-            alert('请求超时')
+            toast({
+                title: "request timeout",
+                variant: "destructive",
+                description: "please retry later",
+            })
             break;
     }
     return Promise.reject(error.response?.data)

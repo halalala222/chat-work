@@ -14,6 +14,7 @@ import { useChatStore } from "@/store";
 const ChatPage = () => {
     const [isCollapsed, setIsCollapsed] = useState(false);
     const { currentChat } = useChatStore();
+    
     return (
         <div className="flex h-[calc(100dvh)] flex-col items-center justify-center p-4 md:px-24 py-24 gap-4">
             <div className="flex justify-between max-w-5xl w-full items-center">

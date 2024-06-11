@@ -41,12 +41,12 @@ import {
 import { CommandList } from "cmdk";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-const SearchUserNotFoundCode = 7;
+const SearchUserNotFoundCode = 10;
 
 const FormSchema = z.object({
     helloWorld: z.string().min(1),
     receiverId: z.number().int().positive(),
-    categoryId: z.string(),
+    categoryId: z.number(),
 })
 
 const AddNewFriendDialogContent = () => {
@@ -92,15 +92,15 @@ const AddNewFriendDialogContent = () => {
         resolver: zodResolver(FormSchema),
         defaultValues: {
             receiverId: searchProps.searchResult?.id,
-            categoryId: "",
-            helloWorld: "I'm " + searchProps.searchResult?.name,
+            categoryId: -1,
+            helloWorld: "I'm " + searchProps.searchResult?.username,
         },
     });
 
     useEffect(() => {
         form.reset({
             receiverId: searchProps.searchResult?.id,
-            helloWorld: "I'm " + searchProps.searchResult?.name,
+            helloWorld: "I'm " + searchProps.searchResult?.username,
             categoryId: form.getValues("categoryId"),  // 保留用户可能已经选择的类别
         });
     }, [searchProps.searchResult, form]);
@@ -108,9 +108,17 @@ const AddNewFriendDialogContent = () => {
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
         await addFriend({
             receiverId: data.receiverId,
-            categoryId: parseInt(data.categoryId),
+            categoryId: data.categoryId,
             helloWorld: data.helloWorld,
         })
+
+        setSearchProps({
+            ...searchProps,
+            searchResult: null,
+            searchStatus: 0,
+            isAdd: false,
+            phone: "",
+        });
     }
 
     const handleCreateCategory = async () => {
@@ -122,7 +130,7 @@ const AddNewFriendDialogContent = () => {
             userCategory: [
                 ...searchProps.userCategory,
                 {
-                    id: res.categoryId.toString(),
+                    id: res.categoryId,
                     categoryName: searchProps.categorySearchQuery,
                 }
             ],
@@ -367,11 +375,11 @@ const AddNewFriendDialogContent = () => {
                                             <div className="flex items-center space-x-2">
                                                 <Avatar className="w-[70px] h-[70px]">
                                                     <AvatarImage src={searchProps.searchResult?.avatar} />
-                                                    <AvatarFallback>{searchProps.searchResult?.name}</AvatarFallback>
+                                                    <AvatarFallback>{searchProps.searchResult?.username}</AvatarFallback>
                                                 </Avatar>
                                                 <div className="text-xl font-semibold">
                                                     {
-                                                        searchProps.searchResult?.name
+                                                        searchProps.searchResult?.username
                                                     }
                                                 </div>
                                             </div>

@@ -100,9 +100,9 @@ const convertToPayment = (frindList: IFriend[] | undefined, category: IUserCateg
         return [] as Payment[];
     }
     return frindList.map((friend) => ({
-        userID: parseInt(friend.userID),
-        userName: friend.userName,
-        categoryID: parseInt(category.id),
+        userID: parseInt(friend.friendId),
+        userName: friend.friendName,
+        categoryID: category.id,
         categoryName: category.categoryName,
     }));
 }
@@ -152,10 +152,10 @@ export default function CategoryDialogContentFriendList() {
         }
 
         const selectUserIDList = categoryContentProps.currentCategory?.friendList.filter((friend) =>
-            selectedUserIDList.includes(parseInt(friend.userID))
+            selectedUserIDList.includes(parseInt(friend.friendId))
         );
         const newCategoryFriendList = categoryContentProps.allCategoryFriendList.map((categoryFriendList) => {
-            if (categoryFriendList.category.id === categoryID.toString()) {
+            if (categoryFriendList.category.id === categoryID) {
                 return {
                     category: categoryFriendList.category,
                     friendList: categoryFriendList.friendList.concat(
@@ -166,7 +166,7 @@ export default function CategoryDialogContentFriendList() {
                 return {
                     category: categoryFriendList.category,
                     friendList: categoryFriendList.friendList.filter((friend) =>
-                        !selectedUserIDList.includes(parseInt(friend.userID))
+                        !selectedUserIDList.includes(parseInt(friend.friendId))
                     ),
                 };
             }
@@ -307,7 +307,7 @@ export default function CategoryDialogContentFriendList() {
                                                 className="capitalize"
                                                 onClick={
                                                     () => handleChangeUserListCategory(
-                                                        parseInt(categoryFriendList.category.id)
+                                                        categoryFriendList.category.id
                                                     )
                                                 }
                                             >

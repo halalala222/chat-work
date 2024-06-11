@@ -14,7 +14,6 @@ const getIsLogin = () => {
         const cacheToken = cacheGet(COMMON_CONFIG.TOKENCACHEKEY)
         return cacheToken ? true : false
     } catch (e: any) {
-        console.log(e)
         navigate("/login")
     }
 }

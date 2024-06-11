@@ -1,5 +1,5 @@
 import { DialogContent, DialogHeader, DialogClose } from "@/components/ui/dialog";
-import { useCategoryContentStore, useInviteMessageStore } from "@/store";
+import { useInviteMessageStore, useUserCategoryStore } from "@/store";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import {
     Select,
@@ -22,8 +22,9 @@ import {
     FormLabel,
     FormMessage,
 } from "@/components/ui/form";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
+import { getUserCategoryList, handleInvitedMessage } from "@/api/chat";
 
 const FormSchema = z.object({
     categoryID: z.string(),
@@ -33,24 +34,42 @@ const InviteMessageAccepting = ({ selectUserID }: { selectUserID: string }) => {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
     });
-    const { inviteMessageList, setInviteMessageList } = useInviteMessageStore();
-    const { categoryContentProps } = useCategoryContentStore();
+    const { inviteMessageList, setInviteMessageList, setSelectedMessage } = useInviteMessageStore();
+    const { userCategory, setUserCategory } = useUserCategoryStore();
+    const fetchCategoryList = async () => {
+        const categoryList = await getUserCategoryList();
+        setUserCategory(categoryList);
+    };
+
+
+    useEffect(() => {
+        if (!userCategory || userCategory.length === 0) {
+            fetchCategoryList()
+        }
+    }, [userCategory])
+
     const formRef = useRef<HTMLFormElement>(null);
     function onSubmit(data: z.infer<typeof FormSchema>) {
         const newInviteMessageList = inviteMessageList.map((inviteMessage) => {
             if (inviteMessage.from.userID === selectUserID) {
                 return {
                     ...inviteMessage,
-                    isRead: true,
+                    isAccepted: true,
                 }
             }
             return inviteMessage;
         })
 
+        setSelectedMessage(null);
         setInviteMessageList(newInviteMessageList);
-        // TODO do post request to accept invite message
-        console.log(data);
+
+        handleInvitedMessage({
+            SenderId: parseInt(selectUserID),
+            CategoryId: parseInt(data.categoryID),
+            Status: 1,
+        });
     }
+
     return (
         <DialogContent>
             <DialogHeader>
@@ -76,10 +95,10 @@ const InviteMessageAccepting = ({ selectUserID }: { selectUserID: string }) => {
                                         <SelectGroup>
                                             <SelectLabel>Category List</SelectLabel>
                                             {
-                                                categoryContentProps.allCategoryFriendList.map((category) => {
+                                                userCategory.map((category) => {
                                                     return (
-                                                        <SelectItem key={category.category.id} value={category.category.id}>
-                                                            {category.category.categoryName}
+                                                        <SelectItem key={category.id} value={category.id.toString()}>
+                                                            {category.categoryName}
                                                         </SelectItem>
                                                     )
                                                 })

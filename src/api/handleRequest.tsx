@@ -5,8 +5,8 @@ import { cacheGet } from '@/lib/localstorage'
 
 export const handleRequest = async (config: InternalAxiosRequestConfig<any>) => {
     const token = cacheGet(COMMON_CONFIG.TOKENCACHEKEY)
-    if (token && config.url !== '/login') {
-        config.headers.Authorization = `Bearer ${token}`
+    if (token && config.url !== '/user/login' && config.url !== '/user/code') {
+        config.headers.Authorization = `${token}`
     }
 
     return config

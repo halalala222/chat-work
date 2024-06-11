@@ -10,121 +10,13 @@ import AddNewFriendDialogContent from "@/components/addNewFriendDialogContent";
 import NewGroupDialogContent from "@/components/newGroupDialogContent";
 import LogOutDialogContent from "@/components/logoutDialogContent";
 import InviteMessageListDialogContent from "@/components/inviteMessageListDialogContent";
-import { useEffect } from "react";
 import CategoryDialogContent from "./categoryDialogContent";
-
-const mockInviteMessageList = [
-    {
-        from: {
-            userName: 'lioooo1',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '1',
-            sex: 0,
-        },
-        time: '16:11AM',
-        invaiteType: 0,
-        invaiteMessage: 'hi this is lioooo1,welcome to my chat room',
-        isRead: false,
-    },
-    {
-        from: {
-            userName: 'lioooo2',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '2',
-            sex: 1,
-            signature: 'hello world',
-        },
-        time: '16:12AM',
-        invaiteType: 1,
-        invaiteMessage: 'hi this is lioooo2,welcome to my chat room',
-        isRead: true,
-    },
-    {
-        from: {
-            userName: 'lioooo3',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '3',
-            sex: 2,
-        },
-        isRead: false,
-        time: '16:13AM',
-        invaiteType: 0,
-        invaiteMessage: 'hi this is lioooo3,welcome to my chat room',
-    },
-    {
-        from: {
-            userName: 'lioooo4',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '4',
-            sex: 0,
-            signature: 'hello world',
-        },
-        time: '16:14AM',
-        invaiteType: 1,
-        invaiteMessage: 'hi this is lioooo4,welcome to my chat room',
-        isRead: true,
-    },
-    {
-        from: {
-            userName: 'lioooo5',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '5',
-            sex: 1,
-        },
-        time: '16:15AM',
-        invaiteType: 0,
-        isRead: false,
-        invaiteMessage: 'hi this is lioooo5,welcome to my chat room',
-    },
-    {
-        from: {
-            userName: 'lioooo6',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '6',
-            sex: 2,
-            signature: 'hello world',
-        },
-        time: '16:16AM',
-        invaiteType: 1,
-        invaiteMessage: 'hi this is lioooo6,welcome to my chat room',
-        isRead: true,
-    },
-    {
-        from: {
-            userName: 'lioooo7',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '7',
-            sex: 0,
-        },
-        time: '16:17AM',
-        invaiteType: 0,
-        invaiteMessage: 'hi this is lioooo7,welcome to my chat room',
-        isRead: false,
-    },
-    {
-        from: {
-            userName: 'lioooo8',
-            avatar: 'http://e.hiphotos.baidu.com/image/pic/item/a1ec08fa513d2697e542494057fbb2fb4316d81e.jpg',
-            userID: '8',
-            sex: 1,
-            signature: 'hello world',
-        },
-        time: '16:18AM',
-        invaiteType: 1,
-        invaiteMessage: 'hi this is lioooo8,welcome to my chat room',
-        isRead: true,
-    }
-]
 
 const SideBarTopBar = () => {
     const { user } = useUserStore();
-    const { inviteMessageList, setInviteMessageList } = useInviteMessageStore();
+    const { inviteMessageList } = useInviteMessageStore();
 
-    useEffect(() => {
-        setInviteMessageList(mockInviteMessageList);
-    }, [setInviteMessageList]);
-
-    const unReadInviteMessageCount = inviteMessageList.filter((message) => !message.isRead).length;
+    const unReadInviteMessageCount = inviteMessageList.filter((message) => !message.isAccepted).length;
 
     return (
         <div className='flex items-center w-100vw h-12 justify-start px-2'>
@@ -139,9 +31,9 @@ const SideBarTopBar = () => {
                         <div className="flex items-center space-x-2">
                             <Avatar className="w-12 h-12">
                                 <AvatarImage src={user.avatar} alt="@shadcn" />
-                                <AvatarFallback>{user.name}</AvatarFallback>
+                                <AvatarFallback>{user.username}</AvatarFallback>
                             </Avatar>
-                            <p className="text-lg">{user.name}</p>
+                            <p className="text-lg">{user.username}</p>
                         </div>
                     </DropdownMenuLabel>
                     <div className="flex flex-col space-y">

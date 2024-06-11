@@ -130,7 +130,7 @@ const EditProfileDialogContent = () => {
     const form = useForm<z.infer<typeof FormSchema>>({
         resolver: zodResolver(FormSchema),
         defaultValues: {
-            name: user.name,
+            name: user.username,
             description: user.description,
         },
     })
@@ -149,7 +149,7 @@ const EditProfileDialogContent = () => {
         setUser(
             {
                 ...user,
-                name: data.name,
+                username: data.name,
                 description: data.description,
             }
         )
@@ -164,7 +164,7 @@ const EditProfileDialogContent = () => {
                     <input type="file" ref={fileInputRef} className="hidden" onChange={handleUploadPicture} accept="image/gif,image/jpeg,image/jpg,image/png" multiple />
                     <Avatar className="w-full h-full">
                         <AvatarImage src={user.avatar} alt="@shadcn" />
-                        <AvatarFallback>{user.name}</AvatarFallback>
+                        <AvatarFallback>{user.username}</AvatarFallback>
                     </Avatar>
                     <div className="absolute rounded-full inset-0 flex justify-center items-center bg-black bg-opacity-50 opacity-0 hover:opacity-100 transition-opacity duration-300 ease-in-out"
                         onClick={() => {
@@ -194,7 +194,7 @@ const EditProfileDialogContent = () => {
                                 <div className="self-start ml-0">
                                     <div className="flex items-center space-x-2">
                                         <div className="text-black text-2xl font-bold">
-                                            {user.name}
+                                            {user.username}
                                         </div>
                                         <Popover>
                                             <PopoverTrigger>
