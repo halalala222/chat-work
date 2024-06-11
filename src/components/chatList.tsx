@@ -8,7 +8,7 @@ import { useCallback, useEffect, useRef } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useToast } from "@/components/ui/use-toast";
 import VideoMessageCard from "@/components/videoMessageCard";
-import useWebSocket, { ReadyState } from 'react-use-websocket';
+import useWebSocket from 'react-use-websocket';
 import { COMMON_CONFIG } from "@/config";
 import NewMessageToast from "./newMessageToast";
 import { ToastAction } from "./ui/toast";
@@ -24,7 +24,7 @@ const ChatList = () => {
         return `${COMMON_CONFIG.WSURL}?token=${token}`;
     }
 
-    const { sendMessage, lastMessage, readyState } = useWebSocket(getWSURL(), {
+    const { sendMessage, lastMessage } = useWebSocket(getWSURL(), {
         reconnectAttempts: 10,
         reconnectInterval: 3000,
     });
@@ -35,18 +35,6 @@ const ChatList = () => {
         sendMessage(JSON.stringify(message));
         // addMessage(message, false);
     }, [sendMessage]);
-
-    const connectionStatus = {
-        [ReadyState.CONNECTING]: 'Connecting',
-        [ReadyState.OPEN]: 'Open',
-        [ReadyState.CLOSING]: 'Closing',
-        [ReadyState.CLOSED]: 'Closed',
-        [ReadyState.UNINSTANTIATED]: 'Uninstantiated',
-    }[readyState];
-
-    useEffect(() => {
-        console.log('connectionStatus', connectionStatus);
-    });
 
     useEffect(() => {
         if (!lastMessage?.data) return;
@@ -71,9 +59,9 @@ const ChatList = () => {
                     chatListId={data.chatListId}
                     sendTime={data.sendTime}
                 />,
-                duration: 5000,
+                duration: 50000,
                 action: <ToastAction
-                    onClick={() => { handleClickNewMessageToast(data.chatListId) }}
+                    onClick={() => { handleClickNewMessageToast(data.chatListId, newMessage) }}
                     altText={"Turn to"}>Turn To</ToastAction>
             });
         }
@@ -120,6 +108,10 @@ const ChatList = () => {
             setCurrentMessageList(newCurrentMessageList);
         }
 
+        newChatList.sort((a, b) => {
+            return new Date(b.chat.lastSendTime).getTime() - new Date(a.chat.lastSendTime).getTime();
+        });
+
         setChatList(newChatList);
 
     }
@@ -129,16 +121,31 @@ const ChatList = () => {
 
     const saveCurrentMessageListToLocalStorage = (messageList: IMessage[], chat: IChat) => {
         const chatListCacheKey = getChatListCacheKey(chat.chatListId);
-        console.log('saveCurrentMessageListToLocalStorage', messageList);
         localStorage.setItem(chatListCacheKey, JSON.stringify(messageList));
     }
 
-    const handleClickNewMessageToast = (chatListId: number) => {
-        const chat = chatList.find((chat) => chat.chat.chatListId === chatListId);
-        if (!chat) return;
+    const handleClickNewMessageToast = (chatListId: number, newMessage: IMessage) => {
+        const targetChat = chatList.find((chat) => chat.chat.chatListId === chatListId);
+        if (!targetChat) return;
 
-        setCurrentChat(chat.chat);
-        setCurrentMessageList(chat.messageList);
+        targetChat.chat.hasNewMessage = false;
+        targetChat.chat.lastMessageContent = newMessage.messageContent;
+        targetChat.chat.lastSendTime = newMessage.sendTime;
+        targetChat.messageList.push(newMessage);
+        const newChatList = chatList.map((chat) => {
+            if (chat.chat.chatListId === chatListId) {
+                return targetChat;
+            }
+            return chat;
+        });
+
+        newChatList.sort((a, b) => {
+            return new Date(b.chat.lastSendTime).getTime() - new Date(a.chat.lastSendTime).getTime();
+        });
+
+        setChatList(newChatList);
+        setCurrentChat(targetChat.chat);
+        setCurrentMessageList(targetChat.messageList);
     }
 
 

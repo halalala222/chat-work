@@ -77,6 +77,10 @@ const EditProfileDialogContent = () => {
                 file: file,
                 userID: user.id,
             })
+            cacheSet(COMMON_CONFIG.USERPROFILEKEY, {
+                ...user,
+                avatar: reuslt,
+            })
             if (reuslt) {
                 await editUserProfile({
                     avatar: reuslt,
@@ -136,13 +140,14 @@ const EditProfileDialogContent = () => {
     })
 
     const onSubmit = async (data: z.infer<typeof FormSchema>) => {
-        await editUserProfile({
+        cacheSet(COMMON_CONFIG.USERPROFILEKEY, {
+            ...user,
             username: data.name,
             description: data.description,
         });
-        cacheSet(COMMON_CONFIG.USERPROFILEKEY, {
-            ...user,
-            name: data.name,
+
+        await editUserProfile({
+            username: data.name,
             description: data.description,
         });
 

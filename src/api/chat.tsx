@@ -3,7 +3,7 @@ import { handleRequest } from "@/api/handleRequest";
 import { handleResponseError } from "@/api/handleResponseError";
 import { handleResponseSuccess } from "@/api/handleResponseSuccess";
 import { COMMON_CONFIG } from "@/config";
-import { IAddFriendRequest, IGetSTSTokenResponse, ICreatCategoryRequest, ILoginRequest, ILoginResponse, ISearchUserResponse, IUser, IUserCategory, ICreateCategoryResponse, IEditUserProfileRequest, IHandleInviteMessageRequest, IGetUserFriendInviteMessageResponse, IFriend, IChat, IGetNewChatMessageListRequest, IMessage } from "@/store";
+import { IAddFriendRequest, IGetSTSTokenResponse, ICreatCategoryRequest, ILoginRequest, ILoginResponse, ISearchUserResponse, IUser, IUserCategory, ICreateCategoryResponse, IEditUserProfileRequest, IHandleInviteMessageRequest, IGetUserFriendInviteMessageResponse, IFriend, IChat, IGetNewChatMessageListRequest, IMessage, IUpdateCategoryRequest, IUpdateFriendCategoryRequest, ICreateGroupChatRequest } from "@/store";
 axios.defaults.headers.post["Content-Type"] = "application/json";
 
 const chatAxios = axios.create({
@@ -29,6 +29,9 @@ const apiRouters = {
     userFriendLsit: '/friend/list',
     getUserChatList: '/chat/list',
     getUserNewChatMessageList: '/chat/new',
+    updateCategoryName: '/category/name',
+    updateFriendCategory: '/category/friend',
+    createGroupChat: '/user/groupChat/add',
 }
 
 export const login = async (data: ILoginRequest): Promise<ILoginResponse> => {
@@ -103,12 +106,12 @@ export const getUserFriendInviteMessageList = async (): Promise<IGetUserFriendIn
 
 export const getUserFriendList = async (): Promise<IFriend[]> => {
     const res = await chatAxios.get(apiRouters.userFriendLsit);
-    return res.data.data.friendList;
+    return res.data.data;
 }
 
 export const getUserCategoryFriendList = async (categoryId: number): Promise<IFriend[]> => {
     const res = await chatAxios.get(`${apiRouters.userFriendLsit}/${categoryId}`);
-    return res.data.data.friendList;
+    return res.data.data;
 }
 
 export const getUserChatList = async (): Promise<IChat[]> => {
@@ -123,5 +126,29 @@ export const getNewChatMessageList = async (body: IGetNewChatMessageListRequest)
             oldMessageId: body.oldMessageId,
         }
     });
+    return res.data.data;
+}
+
+export const updateCategoryName = async (body: IUpdateCategoryRequest) => {
+    await chatAxios.put(apiRouters.updateCategoryName, {
+        categoryId: body.categoryId,
+        categoryName: body.categoryName
+    });
+}
+
+export const updateFriendCategory = async (body: IUpdateFriendCategoryRequest) => {
+    await chatAxios.put(apiRouters.updateFriendCategory, {
+        categoryId: body.categoryId,
+        friendIdList: body.friendIdList
+    });
+}
+
+export const creatGroupChat = async (body: ICreateGroupChatRequest): Promise<IChat> => {
+    const res = await chatAxios.post(apiRouters.createGroupChat, {
+        groupName: body.groupName,
+        groupAvatar: body.groupAvatar,
+        groupMemberIdList: body.groupMemberIdList
+    });
+
     return res.data.data;
 }

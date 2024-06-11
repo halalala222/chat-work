@@ -101,7 +101,6 @@ const SideBar = ({ isCollapsed, }: { isCollapsed: boolean }) => {
             });
 
             const chatList = await Promise.all(chatListPromises);
-            console.log('chatList:', chatList);
             setChatList(chatList);
         } catch (error) {
             console.error('Error fetching chat list:', error);

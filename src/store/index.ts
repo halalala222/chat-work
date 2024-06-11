@@ -102,7 +102,7 @@ export const useUserStore = create<IUserStore>((set) => ({
 }))
 
 export interface IFriend {
-    friendId: string;
+    friendId: number;
     friendName: string;
     friendAvatar: string;
 }
@@ -301,4 +301,20 @@ export const useUserCategoryStore = create<IUserCategoryStore>((set) => ({
 export interface IGetNewChatMessageListRequest {
     chatListId: number;
     oldMessageId: number;
+}
+
+export interface IUpdateCategoryRequest {
+    categoryId: number;
+    categoryName: string;
+}
+
+export interface IUpdateFriendCategoryRequest {
+    categoryId: number;
+    friendIdList: number[];
+}
+
+export interface ICreateGroupChatRequest {
+    groupName: string;
+    groupAvatar: string;
+    groupMemberIdList: number[];
 }

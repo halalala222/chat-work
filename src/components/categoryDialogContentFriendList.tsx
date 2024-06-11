@@ -37,6 +37,7 @@ import {
 } from "@/components/ui/table"
 import { IFriend, useCategoryContentStore, IUserCategory } from "@/store"
 import { ScrollArea } from '@/components/ui/scroll-area';
+import { updateFriendCategory } from "@/api/chat"
 
 const userNameColumnKey = "userName"
 const categoryNameColumnKey = "categoryName"
@@ -100,7 +101,7 @@ const convertToPayment = (frindList: IFriend[] | undefined, category: IUserCateg
         return [] as Payment[];
     }
     return frindList.map((friend) => ({
-        userID: parseInt(friend.friendId),
+        userID: friend.friendId,
         userName: friend.friendName,
         categoryID: category.id,
         categoryName: category.categoryName,
@@ -140,20 +141,26 @@ export default function CategoryDialogContentFriendList() {
         },
     })
 
-    const getSelectedUserIDList = () => {
+    const getSelectedUserIDList = (): number[] => {
         return table.getSelectedRowModel().rows.map((row) => row.original.userID);
     }
 
-    // change user list category to another category(in dropdown menu)
-    const handleChangeUserListCategory = (categoryID: number) => {
+    const handleChangeUserListCategory = async (categoryID: number) => {
+        console.log(1111111111111111111111111)
         const selectedUserIDList = getSelectedUserIDList();
         if (selectedUserIDList.length === 0) {
             return;
         }
 
         const selectUserIDList = categoryContentProps.currentCategory?.friendList.filter((friend) =>
-            selectedUserIDList.includes(parseInt(friend.friendId))
+            selectedUserIDList.includes(friend.friendId)
         );
+
+        await updateFriendCategory({
+            categoryId: categoryID,
+            friendIdList: selectedUserIDList,
+        });
+
         const newCategoryFriendList = categoryContentProps.allCategoryFriendList.map((categoryFriendList) => {
             if (categoryFriendList.category.id === categoryID) {
                 return {
@@ -166,7 +173,7 @@ export default function CategoryDialogContentFriendList() {
                 return {
                     category: categoryFriendList.category,
                     friendList: categoryFriendList.friendList.filter((friend) =>
-                        !selectedUserIDList.includes(parseInt(friend.friendId))
+                        !selectedUserIDList.includes(friend.friendId)
                     ),
                 };
             }
@@ -191,7 +198,7 @@ export default function CategoryDialogContentFriendList() {
     }
 
     return (
-        <div className="w-full p-2">
+        <div className="w-full px-2">
             <div className="flex items-center py-4">
                 <Input
                     placeholder="Filter User Name ..."
@@ -301,15 +308,15 @@ export default function CategoryDialogContentFriendList() {
                                 categoryContentProps.allCategoryFriendList.map((categoryFriendList) => (
                                     <DropdownMenuItem
                                         key={categoryFriendList.category.id}
+                                        onClick={
+                                            async () => {
+                                                await handleChangeUserListCategory(categoryFriendList.category.id)
+                                            }
+                                        }
                                     >
                                         {
                                             <div
                                                 className="capitalize"
-                                                onClick={
-                                                    () => handleChangeUserListCategory(
-                                                        categoryFriendList.category.id
-                                                    )
-                                                }
                                             >
                                                 {
                                                     categoryFriendList.category.categoryName

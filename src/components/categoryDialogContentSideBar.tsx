@@ -3,7 +3,7 @@ import { ScrollArea } from '@/components/ui/scroll-area';
 import { useEffect, useRef } from 'react';
 import { Plus, SquarePen } from 'lucide-react';
 import { Input } from '@/components/ui/input'
-import { createCategory, getUserCategoryFriendList, getUserCategoryList } from '@/api/chat';
+import { createCategory, getUserCategoryFriendList, getUserCategoryList, updateCategoryName } from '@/api/chat';
 
 
 const CategoryDialogContentSideBar = () => {
@@ -17,14 +17,16 @@ const CategoryDialogContentSideBar = () => {
         if (!userCategory) {
             return;
         }
-        if (userCategory.length === 0) {
-            const categoryList = await getUserCategoryList();
-            setUserCategory(categoryList);
-        }
 
-        const allCategoryFriendList = userCategory.map(async (category) => {
-            const friendList = await getUserCategoryFriendList(category.id);
+        const categoryList = await getUserCategoryList();
 
+        const allCategoryFriendList = categoryList.map(async (category) => {
+            let friendList = await getUserCategoryFriendList(category.id);
+            console.log(friendList);
+            if (!friendList) {
+                friendList = [];
+            }
+    
             return {
                 category: {
                     id: category.id,
@@ -35,9 +37,12 @@ const CategoryDialogContentSideBar = () => {
             }
         });
 
+        const result = await Promise.all(allCategoryFriendList);
+        console.log(result);
+        setUserCategory(categoryList);
         setCategoryContentProps({
             ...categoryContentProps,
-            allCategoryFriendList: await Promise.all(allCategoryFriendList)
+            allCategoryFriendList: result,
         });
     }
 
@@ -77,7 +82,6 @@ const CategoryDialogContentSideBar = () => {
     }
 
     const handleNewCategoryNameBlur = async () => {
-        // TODO add new category, but api not ready
         const newLastCategory = categoryContentProps.allCategoryFriendList[categoryContentProps.allCategoryFriendList.length - 1];
         newLastCategory.category.categoryName = categoryContentProps.newCategoryName;
         const categoryId = await createCategory({ categoryName: categoryContentProps.newCategoryName });
@@ -110,7 +114,7 @@ const CategoryDialogContentSideBar = () => {
         })
     }
 
-    const handleEditCategoryNameBlur = (category: ICategoryFriendList) => {
+    const handleEditCategoryNameBlur = async (category: ICategoryFriendList) => {
         const newCategoryList = categoryContentProps.allCategoryFriendList.map((categoryFriendList) => {
             if (categoryFriendList.category.id === category.category.id) {
                 return {
@@ -123,7 +127,10 @@ const CategoryDialogContentSideBar = () => {
             }
             return categoryFriendList;
         })
-        // TODO update category name,but api not ready
+        await updateCategoryName({
+            categoryId: category.category.id,
+            categoryName: category.category.categoryName
+        });
         setCategoryContentProps({
             ...categoryContentProps,
             allCategoryFriendList: newCategoryList
@@ -215,7 +222,7 @@ const CategoryDialogContentSideBar = () => {
                                         className='text-slate-400'
                                     >
                                         {
-                                            ' (' + categoryFriendList.friendList ? categoryFriendList.friendList.length : 0 + ')'
+                                            ' (' + categoryFriendList.friendList.length + ')'
                                         }
                                     </span>
                                 </div>
