@@ -59,7 +59,7 @@ const ChatList = () => {
                     chatListId={data.chatListId}
                     sendTime={data.sendTime}
                 />,
-                duration: 50000,
+                duration: 5000,
                 action: <ToastAction
                     onClick={() => { handleClickNewMessageToast(data.chatListId, newMessage) }}
                     altText={"Turn to"}>Turn To</ToastAction>
